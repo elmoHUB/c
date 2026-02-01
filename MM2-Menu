@@ -282,7 +282,7 @@ local popupClosed = false
 
 WindUI:Popup({
 
-    Title = CreateGradientText("Kuni Hub", Colors.Red, Colors.Green),
+    Title = CreateGradientText("Elmo Hub", Colors.Red, Colors.Green),
 
     Icon = "skull",
 
@@ -310,7 +310,7 @@ WindUI:Popup({
 
             Callback = function()
 
-                setclipboard("https://discord.gg/rp62esPbCm")
+                setclipboard("")
 
                 WindUI:Notify({
 
@@ -362,11 +362,11 @@ repeat task.wait() until popupClosed
 
 local Window = WindUI:CreateWindow({
 
-    Title = CreateGradientText("Kuni Hub | Murder Mystery 2", Colors.Red, Colors.Green),
+    Title = CreateGradientText("Elmo HUB | Murder Mystery 2", Colors.Red, Colors.Green),
 
-    Author = "by kuni ",
+    Author = "by Elmo ",
 
-    Folder = "Kuni Hb",
+    Folder = "Elmo HUB",
 
     Icon = "skull",
 
@@ -388,7 +388,7 @@ local Window = WindUI:CreateWindow({
 
     OpenButton = {
 
-        Title = "Open Kuni Hub",
+        Title = "Open Elmo HUB",
 
         CornerRadius = UDim.new(0.5, 0),
 
