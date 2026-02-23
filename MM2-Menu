@@ -56,7 +56,7 @@ function returncoincontaier()
 	return false
 end
 
-CurrentCoinType = "SnowToken"
+CurrentCoinType = "Coin"
 CoinCollectedEvent.OnClientEvent:Connect(function(cointype, current, max)
 	AutofarmIN = true
 	if cointype == CurrentCoinType and tonumber(current) == tonumber(max) then
