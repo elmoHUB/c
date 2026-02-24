@@ -160,7 +160,7 @@ game:service "Players".LocalPlayer.Idled:connect(
 
  local Tab1 = Window:CreateTab("Auto Farm", 4483362458)
  local Toggle1 = Tab1:CreateToggle({
-        Name = "SnowToken Autofarm",
+        Name = " Coin Autofarm",
      CurrentValue = false,
      Flag = "Toggle1",
      Callback = function(Value)
