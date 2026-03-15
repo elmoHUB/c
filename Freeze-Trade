@@ -1,490 +1,329 @@
 local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
 
-local LocalPlayer = Players.LocalPlayer
-local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
-local isMobile = UserInputService.TouchEnabled and not UserInputService.MouseEnabled
+local G2L = {}
 
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "ZeroHub"
-screenGui.ResetOnSpawn = false
-screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+G2L.Root = Instance.new("ScreenGui")
+G2L.Root.Name = "TradeScam"
+G2L.Root.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+G2L.Root.ResetOnSpawn = false
+G2L.Root.IgnoreGuiInset = true
+G2L.Root.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
 
-local parentSuccess = pcall(function()
-	screenGui.Parent = PlayerGui
-end)
-if not parentSuccess then
-	screenGui.Parent = game:GetService("CoreGui")
-end
+G2L.Main = Instance.new("Frame")
+G2L.Main.Name = "Main"
+G2L.Main.Size = UDim2.new(0, 340, 0, 360)
+G2L.Main.Position = UDim2.new(0.5, -170, 0.5, -180)
+G2L.Main.BackgroundColor3 = Color3.fromRGB(8, 8, 14)
+G2L.Main.BorderSizePixel = 0
+G2L.Main.ClipsDescendants = false
+G2L.Main.Parent = G2L.Root
+Instance.new("UICorner", G2L.Main).CornerRadius = UDim.new(0, 18)
 
-local baseSize = isMobile and UDim2.new(0, 260, 0, 290) or UDim2.new(0, 290, 0, 310)
-local basePos = UDim2.new(0.5, isMobile and -130 or -145, 0.5, isMobile and -145 or -155)
-
-local mainFrame = Instance.new("Frame")
-mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0, 0, 0, 0)
-mainFrame.Position = basePos
-mainFrame.BackgroundColor3 = Color3.fromRGB(5, 5, 8)
-mainFrame.BackgroundTransparency = 0.05
-mainFrame.BorderSizePixel = 0
-mainFrame.ClipsDescendants = true
-mainFrame.Parent = screenGui
-
-local mainCorner = Instance.new("UICorner")
-mainCorner.CornerRadius = UDim.new(0, 14)
-mainCorner.Parent = mainFrame
-
-local mainStroke = Instance.new("UIStroke")
-mainStroke.Color = Color3.fromRGB(60, 60, 80)
-mainStroke.Transparency = 0.3
+local mainStroke = Instance.new("UIStroke", G2L.Main)
 mainStroke.Thickness = 1.5
-mainStroke.Parent = mainFrame
+mainStroke.Color = Color3.fromRGB(80, 40, 255)
+mainStroke.Transparency = 0.35
 
-local bgGradient = Instance.new("UIGradient")
-bgGradient.Color = ColorSequence.new({
-	ColorSequenceKeypoint.new(0, Color3.fromRGB(10, 10, 16)),
-	ColorSequenceKeypoint.new(0.5, Color3.fromRGB(7, 7, 12)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(14, 12, 22))
-})
-bgGradient.Rotation = 135
-bgGradient.Parent = mainFrame
+G2L.Sheen = Instance.new("Frame", G2L.Main)
+G2L.Sheen.Size = UDim2.new(1, 0, 0.45, 0)
+G2L.Sheen.BackgroundColor3 = Color3.fromRGB(120, 80, 255)
+G2L.Sheen.BackgroundTransparency = 0.93
+G2L.Sheen.BorderSizePixel = 0
+G2L.Sheen.ZIndex = 0
+Instance.new("UICorner", G2L.Sheen).CornerRadius = UDim.new(0, 18)
 
-local glowFrame = Instance.new("Frame")
-glowFrame.Size = UDim2.new(1, 0, 0, 2)
-glowFrame.Position = UDim2.new(0, 0, 0, 0)
-glowFrame.BackgroundColor3 = Color3.fromRGB(80, 80, 120)
-glowFrame.BorderSizePixel = 0
-glowFrame.ZIndex = 5
-glowFrame.Parent = mainFrame
+G2L.Scanlines = Instance.new("Frame", G2L.Main)
+G2L.Scanlines.Size = UDim2.new(1, 0, 1, 0)
+G2L.Scanlines.BackgroundTransparency = 1
+G2L.Scanlines.BorderSizePixel = 0
+G2L.Scanlines.ZIndex = 10
+G2L.Scanlines.ClipsDescendants = true
+Instance.new("UICorner", G2L.Scanlines).CornerRadius = UDim.new(0, 18)
+do
+	local grid = Instance.new("UIGridLayout", G2L.Scanlines)
+	grid.CellSize = UDim2.new(1, 0, 0, 2)
+	grid.CellPadding = UDim2.new(0, 0, 0, 2)
+	grid.SortOrder = Enum.SortOrder.LayoutOrder
+	for _ = 1, 90 do
+		local line = Instance.new("Frame", G2L.Scanlines)
+		line.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+		line.BackgroundTransparency = 0.93
+		line.BorderSizePixel = 0
+		line.ZIndex = 10
+	end
+end
 
-local glowGrad = Instance.new("UIGradient")
-glowGrad.Color = ColorSequence.new({
-	ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 30, 60)),
-	ColorSequenceKeypoint.new(0.5, Color3.fromRGB(120, 120, 180)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(30, 30, 60))
-})
-glowGrad.Parent = glowFrame
+G2L.Header = Instance.new("Frame", G2L.Main)
+G2L.Header.Name = "Header"
+G2L.Header.Size = UDim2.new(1, 0, 0, 62)
+G2L.Header.BackgroundColor3 = Color3.fromRGB(14, 10, 28)
+G2L.Header.BorderSizePixel = 0
+G2L.Header.ZIndex = 2
+Instance.new("UICorner", G2L.Header).CornerRadius = UDim.new(0, 18)
 
-local topBar = Instance.new("Frame")
-topBar.Name = "TopBar"
-topBar.Size = UDim2.new(1, 0, 0, 44)
-topBar.Position = UDim2.new(0, 0, 0, 2)
-topBar.BackgroundTransparency = 1
-topBar.ZIndex = 3
-topBar.Parent = mainFrame
+local hFix = Instance.new("Frame", G2L.Header)
+hFix.Size = UDim2.new(1, 0, 0.5, 0)
+hFix.Position = UDim2.new(0, 0, 0.5, 0)
+hFix.BackgroundColor3 = Color3.fromRGB(14, 10, 28)
+hFix.BorderSizePixel = 0
+hFix.ZIndex = 2
 
-local logoContainer = Instance.new("Frame")
-logoContainer.Size = UDim2.new(0, 28, 0, 28)
-logoContainer.Position = UDim2.new(0, 12, 0.5, -14)
-logoContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 40)
-logoContainer.BorderSizePixel = 0
-logoContainer.ZIndex = 4
-logoContainer.Parent = topBar
+G2L.AccentBar = Instance.new("Frame", G2L.Header)
+G2L.AccentBar.Size = UDim2.new(0, 80, 0, 3)
+G2L.AccentBar.Position = UDim2.new(0, 16, 0, 0)
+G2L.AccentBar.BackgroundColor3 = Color3.fromRGB(120, 60, 255)
+G2L.AccentBar.BorderSizePixel = 0
+G2L.AccentBar.ZIndex = 5
+Instance.new("UICorner", G2L.AccentBar).CornerRadius = UDim.new(0, 4)
+do
+	local ag = Instance.new("UIGradient", G2L.AccentBar)
+	ag.Color = ColorSequence.new{
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 0, 255)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 200, 255)),
+	}
+end
 
-local logoCorner = Instance.new("UICorner")
-logoCorner.CornerRadius = UDim.new(0, 6)
-logoCorner.Parent = logoContainer
+G2L.Dot = Instance.new("Frame", G2L.Header)
+G2L.Dot.Size = UDim2.new(0, 8, 0, 8)
+G2L.Dot.Position = UDim2.new(0, 18, 0.5, -4)
+G2L.Dot.BackgroundColor3 = Color3.fromRGB(120, 60, 255)
+G2L.Dot.BorderSizePixel = 0
+G2L.Dot.ZIndex = 4
+Instance.new("UICorner", G2L.Dot).CornerRadius = UDim.new(1, 0)
 
-local logoGrad = Instance.new("UIGradient")
-logoGrad.Color = ColorSequence.new({
-	ColorSequenceKeypoint.new(0, Color3.fromRGB(60, 60, 100)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 20, 40))
-})
-logoGrad.Rotation = 135
-logoGrad.Parent = logoContainer
+G2L.Title = Instance.new("TextLabel", G2L.Header)
+G2L.Title.Size = UDim2.new(0, 200, 1, 0)
+G2L.Title.Position = UDim2.new(0, 34, 0, 0)
+G2L.Title.BackgroundTransparency = 1
+G2L.Title.Font = Enum.Font.GothamBlack
+G2L.Title.Text = "TRADE SCAM"
+G2L.Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+G2L.Title.TextSize = 17
+G2L.Title.TextXAlignment = Enum.TextXAlignment.Left
+G2L.Title.ZIndex = 4
+do
+	local tg = Instance.new("UIGradient", G2L.Title)
+	tg.Color = ColorSequence.new{
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(160, 120, 255)),
+	}
+end
 
-local logoLabel = Instance.new("TextLabel")
-logoLabel.Size = UDim2.new(1, 0, 1, 0)
-logoLabel.BackgroundTransparency = 1
-logoLabel.Text = "\u{25C8}"
-logoLabel.TextColor3 = Color3.fromRGB(160, 160, 200)
-logoLabel.TextScaled = true
-logoLabel.Font = Enum.Font.GothamBold
-logoLabel.ZIndex = 5
-logoLabel.Parent = logoContainer
+G2L.Badge = Instance.new("Frame", G2L.Header)
+G2L.Badge.Size = UDim2.new(0, 46, 0, 22)
+G2L.Badge.Position = UDim2.new(1, -58, 0.5, -11)
+G2L.Badge.BackgroundColor3 = Color3.fromRGB(80, 40, 180)
+G2L.Badge.BackgroundTransparency = 0.5
+G2L.Badge.BorderSizePixel = 0
+G2L.Badge.ZIndex = 4
+Instance.new("UICorner", G2L.Badge).CornerRadius = UDim.new(0, 6)
+local badgeStroke = Instance.new("UIStroke", G2L.Badge)
+badgeStroke.Color = Color3.fromRGB(130, 80, 255)
+badgeStroke.Thickness = 1
+badgeStroke.Transparency = 0.3
 
-local titleLabel = Instance.new("TextLabel")
-titleLabel.Size = UDim2.new(0, 110, 0, 18)
-titleLabel.Position = UDim2.new(0, 48, 0, 8)
-titleLabel.BackgroundTransparency = 1
-titleLabel.Text = "Elmo HUB"
-titleLabel.TextColor3 = Color3.fromRGB(180, 180, 210)
-titleLabel.TextScaled = false
-titleLabel.TextSize = isMobile and 12 or 13
-titleLabel.Font = Enum.Font.GothamBold
-titleLabel.TextXAlignment = Enum.TextXAlignment.Left
-titleLabel.ZIndex = 4
-titleLabel.Parent = topBar
+local badgeText = Instance.new("TextLabel", G2L.Badge)
+badgeText.Size = UDim2.new(1, 0, 1, 0)
+badgeText.BackgroundTransparency = 1
+badgeText.Font = Enum.Font.GothamBold
+badgeText.Text = "v1.0"
+badgeText.TextColor3 = Color3.fromRGB(200, 180, 255)
+badgeText.TextSize = 11
+badgeText.ZIndex = 5
 
-local titleGrad = Instance.new("UIGradient")
-titleGrad.Color = ColorSequence.new({
-	ColorSequenceKeypoint.new(0, Color3.fromRGB(220, 220, 240)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 100, 150))
-})
-titleGrad.Parent = titleLabel
+G2L.Divider = Instance.new("Frame", G2L.Main)
+G2L.Divider.Size = UDim2.new(1, -48, 0, 1)
+G2L.Divider.Position = UDim2.new(0, 24, 0, 70)
+G2L.Divider.BorderSizePixel = 0
+G2L.Divider.ZIndex = 3
+do
+	local dg = Instance.new("UIGradient", G2L.Divider)
+	dg.Color = ColorSequence.new{
+		ColorSequenceKeypoint.new(0.00, Color3.fromRGB(8, 8, 14)),
+		ColorSequenceKeypoint.new(0.30, Color3.fromRGB(100, 60, 255)),
+		ColorSequenceKeypoint.new(0.70, Color3.fromRGB(0, 180, 255)),
+		ColorSequenceKeypoint.new(1.00, Color3.fromRGB(8, 8, 14)),
+	}
+end
 
-local subtitleLabel = Instance.new("TextLabel")
-subtitleLabel.Size = UDim2.new(0, 150, 0, 13)
-subtitleLabel.Position = UDim2.new(0, 48, 0, 26)
-subtitleLabel.BackgroundTransparency = 1
-subtitleLabel.Text = "Trade Controller"
-subtitleLabel.TextColor3 = Color3.fromRGB(70, 70, 100)
-subtitleLabel.TextScaled = false
-subtitleLabel.TextSize = isMobile and 9 or 10
-subtitleLabel.Font = Enum.Font.Gotham
-subtitleLabel.TextXAlignment = Enum.TextXAlignment.Left
-subtitleLabel.ZIndex = 4
-subtitleLabel.Parent = topBar
+local btnDefs = {
+	{
+		name  = "ForceAccept",
+		label = "FORCE ACCEPT",
+		sub   = "bypass trade confirmation",
+		icon  = "â—ˆ",
+		base  = Color3.fromRGB(0, 160, 220),
+		glow  = Color3.fromRGB(0, 210, 255),
+		posY  = 88,
+	},
+	{
+		name  = "FreezeVictim",
+		label = "FREEZE VICTIM",
+		sub   = "lock target in place",
+		icon  = "â—ˆ",
+		base  = Color3.fromRGB(190, 30, 45),
+		glow  = Color3.fromRGB(255, 60, 75),
+		posY  = 172,
+	},
+	{
+		name  = "ForceGive",
+		label = "FORCE GIVE BRAINROT",
+		sub   = "push all items instantly",
+		icon  = "â—ˆ",
+		base  = Color3.fromRGB(90, 20, 200),
+		glow  = Color3.fromRGB(150, 70, 255),
+		posY  = 256,
+	},
+}
 
-local minimizeBtn = Instance.new("TextButton")
-minimizeBtn.Size = UDim2.new(0, 24, 0, 24)
-minimizeBtn.Position = UDim2.new(1, -36, 0.5, -12)
-minimizeBtn.BackgroundColor3 = Color3.fromRGB(18, 18, 28)
-minimizeBtn.Text = "-"
-minimizeBtn.TextColor3 = Color3.fromRGB(130, 130, 160)
-minimizeBtn.TextSize = 14
-minimizeBtn.Font = Enum.Font.GothamBold
-minimizeBtn.BorderSizePixel = 0
-minimizeBtn.ZIndex = 6
-minimizeBtn.Parent = topBar
+for _, def in ipairs(btnDefs) do
+	local card = Instance.new("Frame", G2L.Main)
+	card.Name = def.name .. "Card"
+	card.Size = UDim2.new(0, 292, 0, 64)
+	card.Position = UDim2.new(0.5, -146, 0, def.posY)
+	card.BackgroundColor3 = Color3.fromRGB(16, 12, 30)
+	card.BorderSizePixel = 0
+	card.ZIndex = 3
+	Instance.new("UICorner", card).CornerRadius = UDim.new(0, 12)
 
-local minCorner = Instance.new("UICorner")
-minCorner.CornerRadius = UDim.new(0, 6)
-minCorner.Parent = minimizeBtn
+	local cardStroke = Instance.new("UIStroke", card)
+	cardStroke.Thickness = 1.2
+	cardStroke.Color = def.base
+	cardStroke.Transparency = 0.55
 
-local divider = Instance.new("Frame")
-divider.Size = UDim2.new(1, -24, 0, 1)
-divider.Position = UDim2.new(0, 12, 0, 46)
-divider.BackgroundColor3 = Color3.fromRGB(50, 50, 75)
-divider.BackgroundTransparency = 0.5
-divider.BorderSizePixel = 0
-divider.Parent = mainFrame
+	local stripe = Instance.new("Frame", card)
+	stripe.Size = UDim2.new(0, 3, 0.65, 0)
+	stripe.Position = UDim2.new(0, 10, 0.175, 0)
+	stripe.BackgroundColor3 = def.glow
+	stripe.BorderSizePixel = 0
+	stripe.ZIndex = 4
+	Instance.new("UICorner", stripe).CornerRadius = UDim.new(0, 4)
 
-local divGrad = Instance.new("UIGradient")
-divGrad.Color = ColorSequence.new({
-	ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
-	ColorSequenceKeypoint.new(0.3, Color3.fromRGB(80, 80, 120)),
-	ColorSequenceKeypoint.new(0.7, Color3.fromRGB(80, 80, 120)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
-})
-divGrad.Parent = divider
+	local icon = Instance.new("TextLabel", card)
+	icon.Size = UDim2.new(0, 36, 1, 0)
+	icon.Position = UDim2.new(0, 20, 0, 0)
+	icon.BackgroundTransparency = 1
+	icon.Font = Enum.Font.GothamBold
+	icon.Text = def.icon
+	icon.TextColor3 = def.glow
+	icon.TextSize = 22
+	icon.ZIndex = 4
 
-local contentFrame = Instance.new("Frame")
-contentFrame.Name = "Content"
-contentFrame.Size = UDim2.new(1, 0, 1, -48)
-contentFrame.Position = UDim2.new(0, 0, 0, 48)
-contentFrame.BackgroundTransparency = 1
-contentFrame.Parent = mainFrame
+	local lbl = Instance.new("TextLabel", card)
+	lbl.Size = UDim2.new(0, 210, 0, 28)
+	lbl.Position = UDim2.new(0, 58, 0, 10)
+	lbl.BackgroundTransparency = 1
+	lbl.Font = Enum.Font.GothamBlack
+	lbl.Text = def.label
+	lbl.TextColor3 = Color3.fromRGB(240, 235, 255)
+	lbl.TextSize = 14
+	lbl.TextXAlignment = Enum.TextXAlignment.Left
+	lbl.ZIndex = 4
 
-local contentLayout = Instance.new("UIListLayout")
-contentLayout.Padding = UDim.new(0, 7)
-contentLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-contentLayout.VerticalAlignment = Enum.VerticalAlignment.Top
-contentLayout.SortOrder = Enum.SortOrder.LayoutOrder
-contentLayout.Parent = contentFrame
+	local sub = Instance.new("TextLabel", card)
+	sub.Size = UDim2.new(0, 210, 0, 18)
+	sub.Position = UDim2.new(0, 58, 0, 36)
+	sub.BackgroundTransparency = 1
+	sub.Font = Enum.Font.Gotham
+	sub.Text = def.sub
+	sub.TextColor3 = Color3.fromRGB(120, 110, 160)
+	sub.TextSize = 11
+	sub.TextXAlignment = Enum.TextXAlignment.Left
+	sub.ZIndex = 4
 
-local contentPadding = Instance.new("UIPadding")
-contentPadding.PaddingTop = UDim.new(0, 10)
-contentPadding.PaddingLeft = UDim.new(0, 10)
-contentPadding.PaddingRight = UDim.new(0, 10)
-contentPadding.Parent = contentFrame
+	local btn = Instance.new("TextButton", card)
+	btn.Name = def.name
+	btn.Size = UDim2.new(1, 0, 1, 0)
+	btn.BackgroundTransparency = 1
+	btn.Text = ""
+	btn.ZIndex = 6
 
-local function createToggleButton(name, order)
-	local btnHeight = isMobile and 44 or 48
-
-	local container = Instance.new("Frame")
-	container.Name = name .. "Container"
-	container.Size = UDim2.new(1, 0, 0, btnHeight)
-	container.BackgroundColor3 = Color3.fromRGB(10, 10, 16)
-	container.BackgroundTransparency = 0.2
-	container.BorderSizePixel = 0
-	container.LayoutOrder = order
-	container.Parent = contentFrame
-
-	local containerCorner = Instance.new("UICorner")
-	containerCorner.CornerRadius = UDim.new(0, 10)
-	containerCorner.Parent = container
-
-	local containerStroke = Instance.new("UIStroke")
-	containerStroke.Color = Color3.fromRGB(45, 45, 65)
-	containerStroke.Transparency = 0.6
-	containerStroke.Thickness = 1
-	containerStroke.Parent = container
-
-	local containerGrad = Instance.new("UIGradient")
-	containerGrad.Color = ColorSequence.new({
-		ColorSequenceKeypoint.new(0, Color3.fromRGB(18, 18, 28)),
-		ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 16))
-	})
-	containerGrad.Rotation = 135
-	containerGrad.Parent = container
-
-	local iconLabel = Instance.new("TextLabel")
-	iconLabel.Size = UDim2.new(0, 26, 0, 26)
-	iconLabel.Position = UDim2.new(0, 10, 0.5, -13)
-	iconLabel.BackgroundColor3 = Color3.fromRGB(20, 20, 32)
-	iconLabel.Text = "\u{25C8}"
-	iconLabel.TextColor3 = Color3.fromRGB(120, 120, 160)
-	iconLabel.TextScaled = true
-	iconLabel.Font = Enum.Font.GothamBold
-	iconLabel.BorderSizePixel = 0
-	iconLabel.ZIndex = 2
-	iconLabel.Parent = container
-
-	local iconCorner = Instance.new("UICorner")
-	iconCorner.CornerRadius = UDim.new(0, 6)
-	iconCorner.Parent = iconLabel
-
-	local nameLabel = Instance.new("TextLabel")
-	nameLabel.Name = "ButtonName"
-	nameLabel.Size = UDim2.new(1, -105, 0, 17)
-	nameLabel.Position = UDim2.new(0, 44, 0.5, -13)
-	nameLabel.BackgroundTransparency = 1
-	nameLabel.Text = name
-	nameLabel.TextColor3 = Color3.fromRGB(190, 190, 210)
-	nameLabel.TextScaled = false
-	nameLabel.TextSize = isMobile and 11 or 12
-	nameLabel.Font = Enum.Font.GothamBold
-	nameLabel.TextXAlignment = Enum.TextXAlignment.Left
-	nameLabel.ZIndex = 2
-	nameLabel.Parent = container
-
-	local statusLabel = Instance.new("TextLabel")
-	statusLabel.Name = "StatusLabel"
-	statusLabel.Size = UDim2.new(1, -105, 0, 12)
-	statusLabel.Position = UDim2.new(0, 44, 0.5, 2)
-	statusLabel.BackgroundTransparency = 1
-	statusLabel.Text = "Inactive"
-	statusLabel.TextColor3 = Color3.fromRGB(55, 55, 80)
-	statusLabel.TextScaled = false
-	statusLabel.TextSize = isMobile and 8 or 9
-	statusLabel.Font = Enum.Font.Gotham
-	statusLabel.TextXAlignment = Enum.TextXAlignment.Left
-	statusLabel.ZIndex = 2
-	statusLabel.Parent = container
-
-	local toggleTrack = Instance.new("Frame")
-	toggleTrack.Size = UDim2.new(0, 38, 0, 20)
-	toggleTrack.Position = UDim2.new(1, -48, 0.5, -10)
-	toggleTrack.BackgroundColor3 = Color3.fromRGB(18, 18, 28)
-	toggleTrack.BorderSizePixel = 0
-	toggleTrack.ZIndex = 2
-	toggleTrack.Parent = container
-
-	local trackCorner = Instance.new("UICorner")
-	trackCorner.CornerRadius = UDim.new(1, 0)
-	trackCorner.Parent = toggleTrack
-
-	local trackStroke = Instance.new("UIStroke")
-	trackStroke.Color = Color3.fromRGB(45, 45, 65)
-	trackStroke.Transparency = 0.3
-	trackStroke.Thickness = 1
-	trackStroke.Parent = toggleTrack
-
-	local toggleKnob = Instance.new("Frame")
-	toggleKnob.Size = UDim2.new(0, 14, 0, 14)
-	toggleKnob.Position = UDim2.new(0, 3, 0.5, -7)
-	toggleKnob.BackgroundColor3 = Color3.fromRGB(80, 80, 110)
-	toggleKnob.BorderSizePixel = 0
-	toggleKnob.ZIndex = 3
-	toggleKnob.Parent = toggleTrack
-
-	local knobCorner = Instance.new("UICorner")
-	knobCorner.CornerRadius = UDim.new(1, 0)
-	knobCorner.Parent = toggleKnob
-
-	local clickBtn = Instance.new("TextButton")
-	clickBtn.Size = UDim2.new(1, 0, 1, 0)
-	clickBtn.BackgroundTransparency = 1
-	clickBtn.Text = ""
-	clickBtn.ZIndex = 4
-	clickBtn.Parent = container
-
-	local isOn = false
-
-	local function animateToggle(state)
-		isOn = state
-		local knobPos = state and UDim2.new(1, -17, 0.5, -7) or UDim2.new(0, 3, 0.5, -7)
-		local trackColor = state and Color3.fromRGB(40, 40, 70) or Color3.fromRGB(18, 18, 28)
-		local knobColor = state and Color3.fromRGB(160, 160, 200) or Color3.fromRGB(80, 80, 110)
-		local strokeColor = state and Color3.fromRGB(80, 80, 130) or Color3.fromRGB(45, 45, 65)
-		local containerStrokeColor = state and Color3.fromRGB(80, 80, 130) or Color3.fromRGB(45, 45, 65)
-		local containerStrokeTransp = state and 0.2 or 0.6
-		local statusText = state and "Active" or "Inactive"
-		local statusColor = state and Color3.fromRGB(130, 130, 170) or Color3.fromRGB(55, 55, 80)
-		local iconBg = state and Color3.fromRGB(32, 32, 52) or Color3.fromRGB(20, 20, 32)
-		local iconColor = state and Color3.fromRGB(160, 160, 210) or Color3.fromRGB(120, 120, 160)
-
-		TweenService:Create(toggleKnob, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = knobPos, BackgroundColor3 = knobColor}):Play()
-		TweenService:Create(toggleTrack, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundColor3 = trackColor}):Play()
-		TweenService:Create(trackStroke, TweenInfo.new(0.2), {Color = strokeColor}):Play()
-		TweenService:Create(containerStroke, TweenInfo.new(0.2), {Color = containerStrokeColor, Transparency = containerStrokeTransp}):Play()
-		TweenService:Create(iconLabel, TweenInfo.new(0.2), {BackgroundColor3 = iconBg, TextColor3 = iconColor}):Play()
-
-		statusLabel.Text = statusText
-		TweenService:Create(statusLabel, TweenInfo.new(0.2), {TextColor3 = statusColor}):Play()
-
-		local punchTween = TweenService:Create(container, TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0})
-		punchTween:Play()
-		punchTween.Completed:Connect(function()
-			TweenService:Create(container, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.2}):Play()
+	btn.MouseEnter:Connect(function()
+		TweenService:Create(card, TweenInfo.new(0.15, Enum.EasingStyle.Quad), {BackgroundColor3 = Color3.fromRGB(24, 18, 46)}):Play()
+		TweenService:Create(cardStroke, TweenInfo.new(0.15), {Transparency = 0.1}):Play()
+	end)
+	btn.MouseLeave:Connect(function()
+		TweenService:Create(card, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {BackgroundColor3 = Color3.fromRGB(16, 12, 30)}):Play()
+		TweenService:Create(cardStroke, TweenInfo.new(0.2), {Transparency = 0.55}):Play()
+	end)
+	btn.MouseButton1Click:Connect(function()
+		TweenService:Create(card, TweenInfo.new(0.07), {BackgroundColor3 = Color3.lerp(Color3.fromRGB(16,12,30), def.glow, 0.25)}):Play()
+		task.delay(0.1, function()
+			TweenService:Create(card, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(16, 12, 30)}):Play()
 		end)
+	end)
 
-		if state then
-			local ripple = Instance.new("Frame")
-			ripple.Size = UDim2.new(0, 0, 0, 0)
-			ripple.Position = UDim2.new(0.5, 0, 0.5, 0)
-			ripple.BackgroundColor3 = Color3.fromRGB(80, 80, 130)
-			ripple.BackgroundTransparency = 0.5
-			ripple.BorderSizePixel = 0
-			ripple.ZIndex = 5
-			ripple.ClipsDescendants = false
-			ripple.Parent = container
-			local rippleCorner = Instance.new("UICorner")
-			rippleCorner.CornerRadius = UDim.new(1, 0)
-			rippleCorner.Parent = ripple
-			TweenService:Create(ripple, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-				Size = UDim2.new(0, 280, 0, 280),
-				Position = UDim2.new(0.5, -140, 0.5, -140),
-				BackgroundTransparency = 1
-			}):Play()
-			task.delay(0.4, function() ripple:Destroy() end)
-		end
-
-		print("[Zero] " .. name .. " -> " .. (state and "ON" or "OFF"))
-	end
-
-	clickBtn.MouseButton1Click:Connect(function() animateToggle(not isOn) end)
-	clickBtn.MouseEnter:Connect(function() TweenService:Create(container, TweenInfo.new(0.15), {BackgroundTransparency = 0}):Play() end)
-	clickBtn.MouseLeave:Connect(function() TweenService:Create(container, TweenInfo.new(0.15), {BackgroundTransparency = 0.2}):Play() end)
+	G2L[def.name] = btn
 end
 
-createToggleButton("Freeze Trade", 1)
-createToggleButton("Auto Accept", 2)
-createToggleButton("Cancel Trade", 3)
+do
+	local dragging = false
+	local dragInput, dragStart, startPos
 
-local footerFrame = Instance.new("Frame")
-footerFrame.Size = UDim2.new(1, 0, 0, 36)
-footerFrame.BackgroundTransparency = 1
-footerFrame.LayoutOrder = 4
-footerFrame.Parent = contentFrame
-
-local madeByLabel = Instance.new("TextLabel")
-madeByLabel.Size = UDim2.new(1, 0, 0, 14)
-madeByLabel.Position = UDim2.new(0, 0, 0, 4)
-madeByLabel.BackgroundTransparency = 1
-madeByLabel.Text = "Made By Zero"
-madeByLabel.TextColor3 = Color3.fromRGB(65, 65, 95)
-madeByLabel.TextScaled = false
-madeByLabel.TextSize = isMobile and 9 or 10
-madeByLabel.Font = Enum.Font.GothamBold
-madeByLabel.TextXAlignment = Enum.TextXAlignment.Center
-madeByLabel.Parent = footerFrame
-
-local socLabel = Instance.new("TextLabel")
-socLabel.Size = UDim2.new(1, 0, 0, 12)
-socLabel.Position = UDim2.new(0, 0, 0, 20)
-socLabel.BackgroundTransparency = 1
-socLabel.Text = "TT: ElmoHUB"
-socLabel.TextColor3 = Color3.fromRGB(40, 40, 60)
-socLabel.TextScaled = false
-socLabel.TextSize = isMobile and 8 or 9
-socLabel.Font = Enum.Font.Gotham
-socLabel.TextXAlignment = Enum.TextXAlignment.Center
-socLabel.Parent = footerFrame
-
-local minimized = false
-local fullSize = baseSize
-local miniSize = UDim2.new(0, fullSize.X.Offset, 0, 46)
-
-minimizeBtn.MouseButton1Click:Connect(function()
-	minimized = not minimized
-	if minimized then
-		minimizeBtn.Text = "+"
-		TweenService:Create(mainFrame, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.InOut), {Size = miniSize}):Play()
-	else
-		minimizeBtn.Text = "-"
-		TweenService:Create(mainFrame, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = fullSize}):Play()
-	end
-end)
-
-local dragging = false
-local dragStart = nil
-local startPos = nil
-
-local function onDragBegan(input)
-	dragging = true
-	dragStart = input.Position
-	startPos = mainFrame.Position
-end
-
-local function onDragChanged(input)
-	if dragging then
+	local function updateDrag(input)
 		local delta = input.Position - dragStart
-		mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+		local newPos = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+		TweenService:Create(G2L.Main, TweenInfo.new(0.08, Enum.EasingStyle.Linear), {Position = newPos}):Play()
 	end
+
+	G2L.Header.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1
+			or input.UserInputType == Enum.UserInputType.Touch then
+			dragging = true
+			dragStart = input.Position
+			startPos = G2L.Main.Position
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					dragging = false
+				end
+			end)
+		end
+	end)
+
+	G2L.Header.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement
+			or input.UserInputType == Enum.UserInputType.Touch then
+			dragInput = input
+		end
+	end)
+
+	UIS.InputChanged:Connect(function(input)
+		if dragging and input == dragInput then
+			updateDrag(input)
+		end
+	end)
 end
 
-local function onDragEnded()
-	dragging = false
-end
+G2L.Main.Size = UDim2.new(0, 0, 0, 0)
+G2L.Main.BackgroundTransparency = 1
+TweenService:Create(G2L.Main, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+	Size = UDim2.new(0, 340, 0, 360),
+	BackgroundTransparency = 0,
+}):Play()
 
-topBar.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-		onDragBegan(input)
+task.spawn(function()
+	while G2L.Root.Parent do
+		TweenService:Create(G2L.AccentBar, TweenInfo.new(1.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Size = UDim2.new(0, 120, 0, 3)}):Play()
+		task.wait(1.4)
+		TweenService:Create(G2L.AccentBar, TweenInfo.new(1.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Size = UDim2.new(0, 60, 0, 3)}):Play()
+		task.wait(1.4)
 	end
 end)
 
-UserInputService.InputChanged:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-		onDragChanged(input)
+task.spawn(function()
+	while G2L.Root.Parent do
+		TweenService:Create(G2L.Dot, TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundColor3 = Color3.fromRGB(0, 200, 255)}):Play()
+		task.wait(0.9)
+		TweenService:Create(G2L.Dot, TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundColor3 = Color3.fromRGB(120, 60, 255)}):Play()
+		task.wait(0.9)
 	end
 end)
 
-UserInputService.InputEnded:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-		onDragEnded()
-	end
-end)
-
-TweenService:Create(mainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = fullSize}):Play()
-
-local shimmerFrame = Instance.new("Frame")
-shimmerFrame.Size = UDim2.new(0, 50, 1, 0)
-shimmerFrame.Position = UDim2.new(-0.3, 0, 0, 0)
-shimmerFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-shimmerFrame.BackgroundTransparency = 0.96
-shimmerFrame.BorderSizePixel = 0
-shimmerFrame.ZIndex = 6
-shimmerFrame.ClipsDescendants = false
-shimmerFrame.Parent = mainFrame
-
-local shimCorner = Instance.new("UICorner")
-shimCorner.CornerRadius = UDim.new(0, 14)
-shimCorner.Parent = shimmerFrame
-
-local shimGrad = Instance.new("UIGradient")
-shimGrad.Color = ColorSequence.new({
-	ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
-	ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 255)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
-})
-shimGrad.Rotation = 15
-shimGrad.Parent = shimmerFrame
-
-local function playShimmer()
-	shimmerFrame.Position = UDim2.new(-0.3, 0, 0, 0)
-	local t = TweenService:Create(shimmerFrame, TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Position = UDim2.new(1.3, 0, 0, 0)})
-	t:Play()
-	t.Completed:Connect(function() task.delay(4, playShimmer) end)
-end
-
-task.delay(1, playShimmer)
-
-RunService.Heartbeat:Connect(function()
-	local t = tick()
-	local alpha = (math.sin(t * 1.5) + 1) / 2
-	mainStroke.Transparency = 0.3 + alpha * 0.4
-end)
+return G2L.Root
